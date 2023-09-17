@@ -5,25 +5,31 @@ from time import time
 t1 = time()
 
 def get_illnesses(age, gender):
-    # Get common illnesses based on age
-    if age < 18:
-        common_illnesses = illnesses_young
-    elif 18 <= age < 50:
-        common_illnesses = illnesses_adult_common
+    # Detailed Age Grouping for illnesses
+    if age < 5:
+        common_illnesses = illnesses_child
+    elif 5 <= age < 12:
+        common_illnesses = illnesses_preteen
+    elif 12 <= age < 18:
+        common_illnesses = illnesses_teen
+    elif 18 <= age < 40:
+        common_illnesses = illnesses_young_adult
+    elif 40 <= age < 60:
+        common_illnesses = illnesses_middle_aged
     else:
         common_illnesses = illnesses_elderly
 
-    # Get gender-specific illnesses
+    # Gender-specific illnesses
     if gender == "Male":
         gender_illnesses = illnesses_male
     elif gender == "Female":
         gender_illnesses = illnesses_female
-    else:  # For Non-Binary or Others, we won't assign gender-specific illnesses
-        gender_illnesses = []
+    else:
+        gender_illnesses = []  # For simplicity, not assigning gender-specific illnesses for non-binary
 
-    # Combine the lists and sample a few illnesses for the patient
+    # Combine lists and sample illnesses
     all_illnesses = common_illnesses + gender_illnesses
-    num_illnesses = np.random.randint(0, 4)  # 0 to 3 illnesses
+    num_illnesses = np.random.randint(0, 4)
     sampled_illnesses = np.random.choice(all_illnesses, num_illnesses, replace=False)
 
     return list(sampled_illnesses)
@@ -31,12 +37,18 @@ def get_illnesses(age, gender):
 
 def get_surgeries(age, gender):
     # Get common surgeries based on age
-    if age < 18:
-        common_surgeries = surgeries_young
-    elif 18 <= age < 50:
-        common_surgeries = surgeries_adult_common
+    if age < 5:
+        common_surgeries = illnesses_child
+    elif 5 <= age < 12:
+        common_surgeries = illnesses_preteen
+    elif 12 <= age < 18:
+        common_surgeries = illnesses_teen
+    elif 18 <= age < 40:
+        common_surgeries = illnesses_young_adult
+    elif 40 <= age < 60:
+        common_surgeries = illnesses_middle_aged
     else:
-        common_surgeries = surgeries_elderly
+        common_surgeries = illnesses_elderly
 
     # Get gender-specific surgeries
     if gender == "Male":
@@ -58,17 +70,20 @@ def get_medications(illnesses):
     meds = []
     for illness in illnesses:
         meds += medications_for_illnesses.get(illness, [])
-    # Remove duplicates and sample a few medications
+    # Remove duplicates
     meds = list(set(meds))
-    num_meds = np.random.randint(0, len(meds) + 1)
-    sampled_meds = np.random.choice(meds, num_meds, replace=False)
-    return list(sampled_meds)
+    if not meds:  # Check if meds list is empty
+        return []
+    num_meds = np.random.randint(1, len(meds) + 1)
+    chosen_meds = np.random.choice(meds, num_meds, replace=False)
+    return list(chosen_meds)
 
-
-# Sample illnesses segregated by age and gender
-illnesses_young = ["Chickenpox", "Measles", "Mumps", "Asthma", "Acne"]
-illnesses_adult_common = ["Hypertension", "Type 2 Diabetes", "Depression", "Anxiety", "Chronic pain"]
-illnesses_elderly = ["Arthritis", "Osteoporosis", "Alzheimer's", "Glaucoma", "Parkinson's"]
+illnesses_child = ["Colic", "Roseola", "Hand foot mouth disease"]
+illnesses_preteen = ["Chickenpox", "Measles", "Mumps", "Asthma"]
+illnesses_teen = ["Acne", "Mono", "Bronchitis"]
+illnesses_young_adult = ["Type 1 Diabetes", "Hypertension", "Anxiety"]
+illnesses_middle_aged = ["Type 2 Diabetes", "Chronic pain", "Arthritis"]
+illnesses_elderly = ["Osteoporosis", "Alzheimer's", "Glaucoma", "Parkinson's"]
 illnesses_male = ["Prostate cancer", "Testicular cancer", "Male pattern baldness"]
 illnesses_female = ["Breast cancer", "Ovarian cancer", "Endometriosis", "Polycystic ovary syndrome"]
 
